@@ -14,7 +14,6 @@ build-front:
       -t "${REGISTRY}${IMAGE_NAME}/${CI_COMMIT_REF_NAME}:${CI_COMMIT_SHA:0:8}" \
       -t "${REGISTRY}${IMAGE_NAME}/${CI_COMMIT_REF_NAME}:latest" \
       "${BUILD_CONTEXT}"
-    echo ${REGISTRY_PASSWORD} | docker login ${REGISTRY} -u ${REGISTRY_USER} --password-stdin
     docker push "${REGISTRY}${IMAGE_NAME}/${CI_COMMIT_REF_NAME}:${CI_COMMIT_SHA:0:8}"
     docker push "${REGISTRY}${IMAGE_NAME}/${CI_COMMIT_REF_NAME}:latest"
 
