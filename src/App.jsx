@@ -9,14 +9,14 @@ const App = () => {
    * All state property to store all waves
    */
   const [allWaves, setAllWaves] = useState([]);
-  const contractAddress = "0xdf74eB199d897a2f4f963650C73F3aeF9E401BA7";
+  const contractAddress = "0x9E07a62d9615A7B1cE08FE2B441d4F3655540C04";
 
   /*
    * Create a method that gets all waves from your contract
    */
   const getAllWaves = async () => {
+    const { ethereum } = window;
     try {
-      const { ethereum } = window;
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
@@ -118,7 +118,7 @@ const App = () => {
         /*
         * Execute the actual wave from your smart contract
         */
-        const waveTxn = await wavePortalContract.wave("this is a message")
+        const waveTxn = await wavePortalContract.wave("this is a message", { gasLimit: 300000 })
         console.log("Mining...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -134,8 +134,42 @@ const App = () => {
     }
   }
 
+  /*useEffect(() => {
+    checkIfWalletIsConnected();
+  }, []);*/
+
+  /**
+   * Listen in for emitter events!
+   */
   useEffect(() => {
     checkIfWalletIsConnected();
+    let wavePortalContract;
+
+    const onNewWave = (from, timestamp, message) => {
+      console.log("NewWave", from, timestamp, message);
+      setAllWaves(prevState => [
+        ...prevState,
+        {
+          address: from,
+          timestamp: new Date(timestamp * 1000),
+          message: message,
+        },
+      ]);
+    };
+
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+      wavePortalContract.on("NewWave", onNewWave);
+    }
+
+    return () => {
+      if (wavePortalContract) {
+        wavePortalContract.off("NewWave", onNewWave);
+      }
+    };
   }, []);
 
   return (
@@ -171,15 +205,9 @@ const App = () => {
                 </div>)
           })}
 
-          <a href="https://rinkeby.etherscan.io/address/0xdf74eB199d897a2f4f963650C73F3aeF9E401BA7" target="_blank" onclick="fonction(this.href); return false;">
+          <a href="https://rinkeby.etherscan.io/address/0x9E07a62d9615A7B1cE08FE2B441d4F3655540C04" target="_blank" onclick="fonction(this.href); return false;">
             <button className="waveButton">
               Voir le contrat sur Etherscan
-            </button>
-          </a>
-
-          <a href="https://rinkeby.etherscan.io/address/0x0da1f4a98ed55aae34c0ae7078a08a3bfe7aaee5" target="_blank" onclick="fonction(this.href); return false;">
-            <button className="waveButton">
-              Voir l'ancien contrat sur Etherscan
             </button>
           </a>
 
