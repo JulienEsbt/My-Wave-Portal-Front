@@ -5,8 +5,53 @@ import abi from "./utils/WavePortal.json";
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
+  /*
+   * All state property to store all waves
+   */
+  const [allWaves, setAllWaves] = useState([]);
+  const contractAddress = "0xdf74eB199d897a2f4f963650C73F3aeF9E401BA7";
 
-  const contractAddress = "0x0dA1F4A98eD55aAe34c0AE7078A08A3BFe7aaeE5";
+  /*
+   * Create a method that gets all waves from your contract
+   */
+  const getAllWaves = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+        /*
+         * Call the getAllWaves method from your Smart Contract
+         */
+        const waves = await wavePortalContract.getAllWaves();
+
+        /*
+         * We only need address, timestamp, and message in our UI so let's
+         * pick those out
+         */
+        let wavesCleaned = [];
+        waves.forEach(wave => {
+          wavesCleaned.push({
+            address: wave.waver,
+            timestamp: new Date(wave.timestamp * 1000),
+            message: wave.message
+          });
+        });
+
+        /*
+         * Store our data in React State
+         */
+        setAllWaves(wavesCleaned);
+      } else {
+        console.log("Ethereum object doesn't exist!")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   /**
    * Create a variable here that references the abi content!
    */
@@ -38,8 +83,8 @@ const App = () => {
   }
 
   /**
-  * Implement your connectWallet method here
-  */
+   * Implement your connectWallet method here
+   */
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
@@ -49,14 +94,12 @@ const App = () => {
         return;
       }
 
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts" 
-      });
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
 
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
@@ -75,7 +118,7 @@ const App = () => {
         /*
         * Execute the actual wave from your smart contract
         */
-        const waveTxn = await wavePortalContract.wave();
+        const waveTxn = await wavePortalContract.wave("this is a message")
         console.log("Mining...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -96,37 +139,52 @@ const App = () => {
   }, []);
 
   return (
-    <div className="mainContainer">
-      <div className="dataContainer">
-        <div className="header">
-        👋 Yo les gars !
-        </div>
+      <div className="mainContainer">
+        <div className="dataContainer">
+          <div className="header">
+            👋 Yo les gars !
+          </div>
 
-        <div className="bio">
-          Ceci est mon premier smart contract !! Vas y clique, balance une transaction dans la blockchain !
-        </div>
+          <div className="bio">
+            C'est mon premier smart contract !! Vas y clique, balance une transaction dans la blockchain !
+          </div>
 
-        <button className="waveButton" onClick={wave}>
-          Wave at Me
-        </button>
+          <button className="waveButton" onClick={wave}>
+            Wave at Me
+          </button>
 
-        {/*
+          {/*
         * If there is no currentAccount render this button
         */}
-        {!currentAccount && (
-          <button className="waveButton" onClick={connectWallet}>
-            Connect Wallet
-          </button>
-        )}
+          {!currentAccount && (
+              <button className="waveButton" onClick={connectWallet}>
+                Connect Wallet
+              </button>
+          )}
 
-        <a href="https://rinkeby.etherscan.io/address/0x0da1f4a98ed55aae34c0ae7078a08a3bfe7aaee5" target="_blank" onclick="fonction(this.href); return false;">
-	        <button className="waveButton">
-		        Voir sur Etherscan
-	        </button>
-        </a>
-            
+          {allWaves.map((wave, index) => {
+            return (
+                <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+                  <div>Address: {wave.address}</div>
+                  <div>Time: {wave.timestamp.toString()}</div>
+                  <div>Message: {wave.message}</div>
+                </div>)
+          })}
+
+          <a href="https://rinkeby.etherscan.io/address/0xdf74eB199d897a2f4f963650C73F3aeF9E401BA7" target="_blank" onclick="fonction(this.href); return false;">
+            <button className="waveButton">
+              Voir le contrat sur Etherscan
+            </button>
+          </a>
+
+          <a href="https://rinkeby.etherscan.io/address/0x0da1f4a98ed55aae34c0ae7078a08a3bfe7aaee5" target="_blank" onclick="fonction(this.href); return false;">
+            <button className="waveButton">
+              Voir l'ancien contrat sur Etherscan
+            </button>
+          </a>
+
+        </div>
       </div>
-    </div>
   );
 }
 
