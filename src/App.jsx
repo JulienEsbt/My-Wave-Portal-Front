@@ -5,7 +5,7 @@ import abi from "./utils/WavePortal.json";
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState();
-  const [msg, setMsg] = useState('');
+  const [msg, setMsg] = useState('Aucun message.');
   /*
    * All state property to store all waves
    */
@@ -187,12 +187,14 @@ const App = () => {
           </div>
 
           <div className="bio">
-            C'est mon premier smart contract !! Vas y clique, balance une transaction dans la blockchain !
+            <b>C'est mon premier smart contract !! Vas y clique, écrit un message et balance une transaction dans la blockchain !</b>
           </div>
 
-          <button className="waveButton" onClick={wave}>
-            Wave at Me
-          </button>
+          <label className="waveButton">
+            <p>Message : <input type="text" name="name"  onChange={handleInputChange}/>   <button className="waveButton" onClick={wave}>
+              Envoyer le message
+            </button></p>
+          </label>
 
           {/*
         * If there is no currentAccount render this button
@@ -219,12 +221,6 @@ const App = () => {
               Voir le contrat sur Etherscan
             </button>
           </a>
-
-            <label >
-              Message :
-              <input type="text" name="name"  onChange={handleInputChange}/>
-            </label>
-
 
         </div>
       </div>
