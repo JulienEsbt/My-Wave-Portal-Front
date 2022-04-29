@@ -214,7 +214,7 @@ const App = () => {
 
 
 
-          <a href="https://rinkeby.etherscan.io/address/0x9E07a62d9615A7B1cE08FE2B441d4F3655540C04" target="_blank" onClick="fonction(this.href); return false;">
+          <a href="https://rinkeby.etherscan.io/address/0x9F813a6FF2dE65dE7a4d6504BC0fDA96E6983A72" target="_blank" onClick="fonction(this.href); return false;">
             <button className="waveButton">
               Voir le contrat sur Etherscan
             </button>
