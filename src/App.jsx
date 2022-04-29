@@ -10,7 +10,7 @@ const App = () => {
    * All state property to store all waves
    */
   const [allWaves, setAllWaves] = useState([]);
-  const contractAddress = "0x9F813a6FF2dE65dE7a4d6504BC0fDA96E6983A72";
+  const contractAddress = "0xa9587b45FE350037a0aD450670D5682797ee9f2d";
 
   let handleInputChange = (e) => {
     console.log ("handleInputChange")
@@ -216,7 +216,7 @@ const App = () => {
 
 
 
-          <a href="https://rinkeby.etherscan.io/address/0x9F813a6FF2dE65dE7a4d6504BC0fDA96E6983A72" target="_blank" onClick="fonction(this.href); return false;">
+          <a href="https://rinkeby.etherscan.io/address/0xa9587b45FE350037a0aD450670D5682797ee9f2d" target="_blank" onClick="fonction(this.href); return false;">
             <button className="waveButton">
               Voir le contrat sur Etherscan
             </button>
