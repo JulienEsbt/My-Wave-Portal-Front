@@ -4,12 +4,20 @@ import "./App.css";
 import abi from "./utils/WavePortal.json";
 
 const App = () => {
-  const [currentAccount, setCurrentAccount] = useState("");
+  const [currentAccount, setCurrentAccount] = useState();
+  const [msg, setMsg] = useState('');
   /*
    * All state property to store all waves
    */
   const [allWaves, setAllWaves] = useState([]);
-  const contractAddress = "0x9E07a62d9615A7B1cE08FE2B441d4F3655540C04";
+  const contractAddress = "0x9F813a6FF2dE65dE7a4d6504BC0fDA96E6983A72";
+
+  let handleInputChange = (e) => {
+    console.log ("handleInputChange")
+    setMsg(e.target.value)
+  };
+
+
   /*
    * Create a method that gets all waves from your contract
    */
@@ -117,7 +125,7 @@ const App = () => {
         /*
         * Execute the actual wave from your smart contract
         */
-        const waveTxn = await wavePortalContract.wave("this is a message", { gasLimit: 300000 })
+        const waveTxn = await wavePortalContract.wave(msg, { gasLimit: 300000 })
         console.log("Mining...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -133,9 +141,9 @@ const App = () => {
     }
   }
 
-  /*useEffect(() => {
-    checkIfWalletIsConnected();
-  }, []);*/
+  // useEffect(() => {
+  //   checkIfWalletIsConnected();
+  // }, []);
 
   /**
    * Listen in for emitter events!
@@ -204,11 +212,19 @@ const App = () => {
                 </div>)
           })}
 
-          <a href="https://rinkeby.etherscan.io/address/0x9E07a62d9615A7B1cE08FE2B441d4F3655540C04" target="_blank" onclick="fonction(this.href); return false;">
+
+
+          <a href="https://rinkeby.etherscan.io/address/0x9E07a62d9615A7B1cE08FE2B441d4F3655540C04" target="_blank" onClick="fonction(this.href); return false;">
             <button className="waveButton">
               Voir le contrat sur Etherscan
             </button>
           </a>
+
+            <label >
+              Message :
+              <input type="text" name="name"  onChange={handleInputChange}/>
+            </label>
+
 
         </div>
       </div>
