@@ -141,10 +141,6 @@ const App = () => {
     }
   }
 
-  // useEffect(() => {
-  //   checkIfWalletIsConnected();
-  // }, []);
-
   /**
    * Listen in for emitter events!
    */

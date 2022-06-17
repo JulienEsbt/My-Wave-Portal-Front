@@ -1,4 +1,6 @@
-## Running React on Repl.it
+Front-End To interact with My Wave Portal Smart Contract, Create with React.
+
+## Running React
 
 [React](https://reactjs.org/) is a popular JavaScript library for building user interfaces.
 
